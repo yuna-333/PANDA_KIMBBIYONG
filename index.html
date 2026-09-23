@@ -81,21 +81,10 @@
             padding-right: 2px;
         }
 
-        /* 스크롤바 커스텀 스타일 (500칸 모드용) */
-        .grid-container::-webkit-scrollbar {
-            width: 6px;
-        }
-        .grid-container::-webkit-scrollbar-track {
-            background: rgba(237, 226, 255, 0.5);
-            border-radius: 3px;
-        }
-        .grid-container::-webkit-scrollbar-thumb {
-            background: #cbb2fe;
-            border-radius: 3px;
-        }
-        .grid-container::-webkit-scrollbar-thumb:hover {
-            background: #7c4dff;
-        }
+        .grid-container::-webkit-scrollbar { width: 6px; }
+        .grid-container::-webkit-scrollbar-track { background: rgba(237, 226, 255, 0.5); border-radius: 3px; }
+        .grid-container::-webkit-scrollbar-thumb { background: #cbb2fe; border-radius: 3px; }
+        .grid-container::-webkit-scrollbar-thumb:hover { background: #7c4dff; }
 
         .grid-container.collapsed {
             transform: scaleX(0);
@@ -158,9 +147,7 @@
             color: #512da8;
         }
 
-        .marquee-container:hover .marquee-track {
-            animation-play-state: paused;
-        }
+        .marquee-container:hover .marquee-track { animation-play-state: paused; }
 
         @keyframes marquee-scroll {
             0% { transform: translateX(0); }
@@ -225,7 +212,6 @@
         .all-flip-btn { position: relative; width: 100%; height: 44px; padding: 0; background: linear-gradient(135deg, #f6f0ff, #e3d2ff); color: #695b8d; border: 1px solid #d9c4ff; border-radius: 0.8em; cursor: pointer; font-size: 20px; font-family: 'OngleipParkDahyeon', sans-serif; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease, background 0.2s ease; overflow: hidden; animation: ultra-smooth-glow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
         .all-flip-btn .btn-text { font-size: 20px; position: relative; z-index: 3; }
         .all-flip-btn::before { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%); transform: skewX(-25deg); animation: shimmer-glow 3.5s ease-in-out infinite; z-index: 2; }
-        
         .all-flip-btn:hover { transform: translateY(-1px); background: linear-gradient(135deg, #b388ff, #7c4dff); color: white; }
         .all-flip-btn:active { transform: translateY(1px); }
 
@@ -381,9 +367,39 @@
         .modal-content { background: linear-gradient(135deg, #ffffff, #f6f0ff); padding: 15px; border-radius: 10px; border: 2px solid #cbb2fe; box-shadow: 0 4px 15px rgba(124, 77, 255, 0.3); width: 280px; font-family: 'NexonLv1Gothic', sans-serif; max-height: 90vh; overflow-y: auto; }
         .modal-input-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
         .modal-input-row label { color: #695b8d; font-weight: bold; width: 32px; flex-shrink: 0; font-size: 13px; text-align: right; }
+
+        /* OBS 전용 Toast 알림창 스타일 */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: linear-gradient(135deg, #7c4dff, #695b8d);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(124, 77, 255, 0.4);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            border: 1px solid #cbb2fe;
+            white-space: nowrap;
+        }
+
+        .toast-container.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
     </style>
 </head>
 <body>
+
+<!-- Toast 알림 요소 -->
+<div id="toastNotification" class="toast-container">알림 메시지</div>
 
 <div class="main-container" id="mainContainer">
     <div class="panel-group broadcast-part" id="leftPanel" style="order: 1;">
@@ -487,7 +503,6 @@
                     <button class="preset-btn" onclick="document.getElementById('prizeFile').click()">⭐프리셋 불러오기</button>
 
                     <h5 style="margin-top: 10px;">진행 상태 저장/복원</h5>
-
                     <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
                         <div style="display:flex; gap:4px;">
                             <button class="save-btn" onclick="quickSaveState(1)">💾 1번 슬롯 저장</button>
@@ -519,12 +534,24 @@
                         <h4 style="color:#695b8d; margin-top:0; text-align:center; border-bottom: 1px dashed #cbb2fe; padding-bottom: 8px; font-size: 15px;">🎁 상품 및 수량 입력</h4>
                         <div style="font-size: 11px; color: #7c4dff; text-align: center; margin-bottom: 8px;">상품명과 개수를 지정하세요</div>
                         
-                        <div id="modalPrizeInputsContainer">
-                        </div>
+                        <div id="modalPrizeInputsContainer"></div>
                         
                         <div style="display:flex; gap:6px; margin-top:12px;">
                             <button class="shuffle-btn" style="margin:0; flex:1; padding: 6px;" onclick="applyModalPrizes()">적용하기</button>
                             <button class="clear-btn" style="flex:1; padding: 6px;" onclick="closePrizeModal()">취소</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 복사 모달 -->
+                <div id="copyModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <h4 style="color:#695b8d; margin-top:0; text-align:center; border-bottom: 1px dashed #cbb2fe; padding-bottom: 8px; font-size: 15px;">📋 현황 텍스트 복사</h4>
+                        <div style="font-size: 11px; color: #7c4dff; text-align: center; margin-bottom: 8px;">아래 상자의 텍스트를 전체 선택(Ctrl+A)하여 복사하세요</div>
+                        <textarea id="copyTextArea" readonly style="width:100%; height:120px; border:1px solid #cbb2fe; border-radius:6px; font-size:11px; padding:6px; resize:none; font-family:monospace; background: #fdfbfm; color:#512da8;"></textarea>
+                        <div style="display:flex; gap:6px; margin-top:12px;">
+                            <button class="shuffle-btn" style="margin:0; flex:1; padding: 6px;" onclick="copyTextAreaContent()">텍스트 드래그 선택</button>
+                            <button class="clear-btn" style="flex:1; padding: 6px;" onclick="closeCopyModal()">닫기</button>
                         </div>
                     </div>
                 </div>
@@ -588,8 +615,8 @@
     let isAnimating = false;
     let isSwapped = false; 
 
-    // 당첨 안내 타이머 관리 변수
     let winNoticeTimer = null;
+    let toastTimer = null;
 
     const rankColors = {
         "1등": { bg: "#673ab7", border: "#512da8", color: "#ffffff" },
@@ -602,6 +629,19 @@
 
     const flipSound = new Audio("flip.mp3");
     const winSound = new Audio("win.mp3");
+
+    // OBS 환경 호환용 Toast 메시지 함수
+    function showToast(msg) {
+        const toast = document.getElementById('toastNotification');
+        toast.innerText = msg;
+        toast.classList.add('show');
+
+        if (toastTimer) clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2500);
+    }
 
     function initAudioUnlock() {
         const unlock = () => {
@@ -628,13 +668,8 @@
         }
     }
 
-    function openScalePopup() {
-        scalePopup.style.display = 'flex';
-    }
-
-    function closeScalePopup() {
-        scalePopup.style.display = 'none';
-    }
+    function openScalePopup() { scalePopup.style.display = 'flex'; }
+    function closeScalePopup() { scalePopup.style.display = 'none'; }
 
     function setScale(val) {
         const scale = val / 100;
@@ -659,39 +694,27 @@
 
         if (size === 25) {
             document.getElementById('size25Btn').classList.add('active');
-            gridCols = 5;
-            gridRows = 5;
+            gridCols = 5; gridRows = 5;
             board.style.gridTemplateColumns = 'repeat(5, 1fr)';
-            board.style.width = '320px';
-            board.style.height = '320px';
-            board.style.overflowY = 'hidden';
+            board.style.width = '320px'; board.style.height = '320px'; board.style.overflowY = 'hidden';
             marqueeContainer.style.width = '320px';
         } else if (size === 50) {
             document.getElementById('size50Btn').classList.add('active');
-            gridCols = 10;
-            gridRows = 5;
+            gridCols = 10; gridRows = 5;
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
-            board.style.width = '320px';
-            board.style.height = '155px';
-            board.style.overflowY = 'hidden';
+            board.style.width = '320px'; board.style.height = '155px'; board.style.overflowY = 'hidden';
             marqueeContainer.style.width = '320px';
         } else if (size === 500) {
             document.getElementById('size500Btn').classList.add('active');
-            gridCols = 10;
-            gridRows = 50;
+            gridCols = 10; gridRows = 50;
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
-            board.style.width = '320px';
-            board.style.height = '320px'; 
-            board.style.overflowY = 'auto'; 
+            board.style.width = '320px'; board.style.height = '320px'; board.style.overflowY = 'auto'; 
             marqueeContainer.style.width = '320px';
         } else {
             document.getElementById('size100Btn').classList.add('active');
-            gridCols = 10;
-            gridRows = 10;
+            gridCols = 10; gridRows = 10;
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
-            board.style.width = '320px';
-            board.style.height = '320px';
-            board.style.overflowY = 'hidden';
+            board.style.width = '320px'; board.style.height = '320px'; board.style.overflowY = 'hidden';
             marqueeContainer.style.width = '320px';
         }
 
@@ -699,9 +722,7 @@
         const totalBarHeight = parseInt(boardHeight) + 38;
         document.getElementById('boardToggleContainer').style.height = totalBarHeight + 'px';
 
-        if (!skipReset) {
-            shuffleAndReset();
-        }
+        if (!skipReset) { shuffleAndReset(); }
     }
 
     function toggleInnerSettings() {
@@ -716,28 +737,21 @@
         }
     }
 
-    function updateTitleText() {
-        textTitle.innerText = titleInput.value || "타이틀을 입력하세요";
-    }
-
-    function updateMegaFlipText() {
-        megaFlipText.innerText = megaFlipInput.value || "모든 숫자 확인";
-    }
+    function updateTitleText() { textTitle.innerText = titleInput.value || "타이틀을 입력하세요"; }
+    function updateMegaFlipText() { megaFlipText.innerText = megaFlipInput.value || "모든 숫자 확인"; }
 
     bannerUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const url = URL.createObjectURL(file);
             imageTitle.src = url;
-            if(!isImageMode) {
-                toggleTitleMode();
-            }
+            if(!isImageMode) { toggleTitleMode(); }
         }
     });
 
     function toggleTitleMode() {
         if (!isImageMode && !imageTitle.src.startsWith('blob')) {
-            alert('먼저 준비된 배너(PNG) 이미지를 업로드해주세요!');
+            showToast('⚠️ 배너 이미지를 먼저 업로드해주세요.');
             return;
         }
         
@@ -754,9 +768,7 @@
     }
 
     function changeOpacity(val) {
-        document.querySelectorAll('.broadcast-part').forEach(el => {
-            el.style.opacity = val / 100;
-        });
+        document.querySelectorAll('.broadcast-part').forEach(el => { el.style.opacity = val / 100; });
         opacityVal.innerText = val + "%";
     }
 
@@ -765,7 +777,6 @@
         const leftPanel = document.getElementById('leftPanel');
         const rightPanel = document.getElementById('rightPanel');
         const container = document.getElementById('mainContainer');
-         
         const boardToggle = document.getElementById('boardToggleContainer');
         const adminToggle = document.getElementById('adminToggleContainer');
 
@@ -773,20 +784,16 @@
             container.classList.add('admin-swapped');
             leftPanel.style.order = "3";
             rightPanel.style.order = "1";
-             
             adminWrapper.style.order = "1";
             adminToggle.style.order = "2";
-             
             boardToggle.style.order = "1";
             boardColumn.style.order = "2";
         } else {
             container.classList.remove('admin-swapped');
             leftPanel.style.order = "1";
             rightPanel.style.order = "3";
-             
             adminToggle.style.order = "1";
             adminWrapper.style.order = "2";
-             
             boardColumn.style.order = "1";
             boardToggle.style.order = "2";
         }
@@ -794,13 +801,8 @@
     }
 
     function updateToggleArrows() {
-        if (!isSwapped) {
-            toggleBtn.innerText = board.classList.contains('collapsed') ? "＜" : "＞";
-            adminToggleBtn.innerText = adminWrapper.classList.contains('collapsed') ? "＞" : "＜";
-        } else {
-            toggleBtn.innerText = board.classList.contains('collapsed') ? "＜" : "＞";
-            adminToggleBtn.innerText = adminWrapper.classList.contains('collapsed') ? "＞" : "＜";
-        }
+        toggleBtn.innerText = board.classList.contains('collapsed') ? "＜" : "＞";
+        adminToggleBtn.innerText = adminWrapper.classList.contains('collapsed') ? "＞" : "＜";
     }
 
     function toggleBoard() {
@@ -836,9 +838,7 @@
         document.getElementById('prizeModal').style.display = 'flex';
     }
 
-    function closePrizeModal() {
-        document.getElementById('prizeModal').style.display = 'none';
-    }
+    function closePrizeModal() { document.getElementById('prizeModal').style.display = 'none'; }
 
     function applyModalPrizes() {
         let newList = [];
@@ -855,7 +855,7 @@
         }
 
         if (totalCountCheck > totalSlots) {
-            alert(`설정된 당첨 총 개수(${totalCountCheck}개)가 현재 뽑기판 총 칸수(${totalSlots}칸)를 초과합니다! 수량을 다시 확인해주세요.`);
+            showToast(`⚠️ 상품 수량 총합(${totalCountCheck}개)이 판 크기(${totalSlots}칸)를 초과합니다.`);
             return;
         }
 
@@ -863,6 +863,7 @@
         renderPrizeList();
         shuffleAndReset();
         closePrizeModal();
+        showToast('✨ 상품 구성 및 수량이 업데이트되었습니다!');
     }
 
     function loadPrizesFromFile(input) {
@@ -875,14 +876,12 @@
             const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
             
             prizeListObj = [];
-            lines.slice(0, 10).forEach((line, index) => {
+            lines.slice(0, 10).forEach((line) => {
                 if (line.includes('/')) {
                     const parts = line.split('/');
                     const name = parts[0].trim();
                     const count = parseInt(parts[1]) || 1;
-                    if (name) {
-                        prizeListObj.push({ name: name, count: count });
-                    }
+                    if (name) prizeListObj.push({ name: name, count: count });
                 } else {
                     prizeListObj.push({ name: line, count: 1 });
                 }
@@ -890,7 +889,7 @@
             
             renderPrizeList();
             shuffleAndReset();
-            alert("메모장 파일에서 상품과 수량을 성공적으로 불러왔습니다!");
+            showToast("⭐ 프리셋 불러오기 완료!");
             input.value = "";
         };
         reader.readAsText(file, "UTF-8");
@@ -914,7 +913,6 @@
             if (index >= 3) badgeIcon = "🎁 ";
             
             li.style.borderLeftColor = listBorderColors[index] || "#e1bee7";
-            
             let countText = item.count > 1 ? ` <span style="font-size:17px; color:#8672B0; margin-left:auto;">(${item.count})</span>` : "";
             
             li.innerHTML = `<span class="rank-badge">${badgeIcon}${index + 1}등</span> <span class="prize-name" style="flex:1;">${item.name}</span>${countText}`;
@@ -924,12 +922,9 @@
     }
 
     function showWinNotice(rankInfo) {
-        if (winNoticeTimer) {
-            clearTimeout(winNoticeTimer);
-        }
+        if (winNoticeTimer) clearTimeout(winNoticeTimer);
 
         marqueeTrack.classList.add('win-notice');
-        
         let noticeText = Array.isArray(rankInfo) ? rankInfo.join(', ') : rankInfo;
         marqueeTrack.innerText = `🎉 ${noticeText} 당첨! 🎉`;
 
@@ -983,7 +978,8 @@
     function clearPrizes() { 
         prizeListObj = []; 
         renderPrizeList(); 
-        renderAnswerSheet(); 
+        renderAnswerSheet();
+        showToast('리셋 되었습니다.');
     }
 
     function buildCards() {
@@ -993,15 +989,9 @@
             cardContainer.classList.add('card-container');
             cardContainer.setAttribute('data-index', i);
             
-            if (totalSlots === 500) {
-                cardContainer.style.height = '31px';
-            } else if (totalSlots === 50) {
-                cardContainer.style.height = '30px';
-            } else if (totalSlots === 25) {
-                cardContainer.style.height = 'auto';
-            } else {
-                cardContainer.style.height = 'auto';
-            }
+            if (totalSlots === 500) cardContainer.style.height = '31px';
+            else if (totalSlots === 50) cardContainer.style.height = '30px';
+            else cardContainer.style.height = 'auto';
 
             const card = document.createElement('div');
             card.classList.add('card');
@@ -1009,9 +999,7 @@
             cardFront.classList.add('card-face', 'card-front');
             cardFront.innerText = i;
             
-            if (totalSlots === 500) {
-                cardFront.style.fontSize = "18px";
-            }
+            if (totalSlots === 500) cardFront.style.fontSize = "18px";
 
             const cardBack = document.createElement('div');
             cardBack.classList.add('card-face', 'card-back');
@@ -1019,12 +1007,11 @@
             
             if (resultText !== "꽝") {
                 cardBack.innerText = resultText;
-                
                 const colorStyle = rankColors[resultText] || defaultWinColor;
                 cardBack.style.background = colorStyle.bg;
                 cardBack.style.borderColor = colorStyle.border;
                 cardBack.style.color = colorStyle.color;
-                cardBack.style.fontSize = totalSlots === 500 ? "20px" : "20px";
+                cardBack.style.fontSize = "20px";
                 cardBack.style.fontWeight = "normal";
             } else {
                 cardBack.innerHTML = '<span style="opacity: 0.8; color: #7e57c2;">X</span>';
@@ -1067,22 +1054,15 @@
         }
 
         currentRewards = Array(totalSlots).fill("꽝");
-        
         let rewardSlots = [];
         prizeListObj.forEach((item, index) => {
             const rankStr = `${index + 1}등`;
-            for(let c = 0; c < item.count; c++) {
-                rewardSlots.push(rankStr);
-            }
+            for(let c = 0; c < item.count; c++) rewardSlots.push(rankStr);
         });
 
-        if (rewardSlots.length > totalSlots) {
-            rewardSlots = rewardSlots.slice(0, totalSlots);
-        }
+        if (rewardSlots.length > totalSlots) rewardSlots = rewardSlots.slice(0, totalSlots);
 
-        for(let i = 0; i < rewardSlots.length; i++) {
-            currentRewards[i] = rewardSlots[i];
-        }
+        for(let i = 0; i < rewardSlots.length; i++) currentRewards[i] = rewardSlots[i];
 
         for (let i = currentRewards.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -1094,7 +1074,6 @@
         buildCards();
     }
 
-    // 데이터 추출 공통 함수
     function getCurrentStateData() {
         const flippedIndices = [];
         document.querySelectorAll('.card').forEach((card, index) => {
@@ -1115,14 +1094,14 @@
         };
     }
 
-    // IndexedDB / LocalStorage 슬롯 저장 기능
+    // 슬롯 저장/불러오기 (OBS 커스텀 Toast 메시지 적용)
     function quickSaveState(slotNum) {
         const stateData = getCurrentStateData();
         try {
             localStorage.setItem(`boardState_slot_${slotNum}`, JSON.stringify(stateData));
-            alert(`[${slotNum}번 슬롯]에 현재 현황이 안전하게 저장되었습니다! (${stateData.savedAt})`);
+            showToast(`💾 [${slotNum}번 슬롯] 현황 저장 완료!`);
         } catch(e) {
-            alert("슬롯 저장을 진행할 수 없습니다.");
+            showToast("⚠️ 슬롯 저장을 실패했습니다.");
         }
     }
 
@@ -1130,59 +1109,63 @@
         try {
             const savedRaw = localStorage.getItem(`boardState_slot_${slotNum}`);
             if (!savedRaw) {
-                alert(`[${slotNum}번 슬롯]에 저장된 데이터가 없습니다.`);
+                showToast(`⚠️ [${slotNum}번 슬롯]에 저장 데이터가 없습니다.`);
                 return;
             }
             const data = JSON.parse(savedRaw);
             restoreBoardState(data);
-            alert(`[${slotNum}번 슬롯]의 현황을 성공적으로 불러왔습니다! (${data.savedAt})`);
+            showToast(`📂 [${slotNum}번 슬롯] 현황 불러오기 완료!`);
         } catch(e) {
-            alert("저장 데이터를 불러오는 도중 오류가 발생했습니다.");
+            showToast("⚠️ 데이터를 불러오는 도중 오류가 발생했습니다.");
         }
     }
 
-    // 클립보드 복사 & 붙여넣기 모달
+    // 클립보드 복사 모달
     function copyStateToClipboard() {
         const stateData = getCurrentStateData();
         const jsonString = JSON.stringify(stateData);
         
+        document.getElementById('copyTextArea').value = jsonString;
+        document.getElementById('copyModal').style.display = 'flex';
+        
         navigator.clipboard.writeText(jsonString).then(() => {
-            alert("현재 현황 텍스트가 클립보드에 복사되었습니다!\n메모장 등에 붙여넣어 보관하실 수 있습니다.");
-        }).catch(err => {
-            prompt("아래 복사 코드를 수동으로 전체 복사(Ctrl+C) 해주세요:", jsonString);
-        });
+            showToast("📋 텍스트가 클립보드에 자동 복사되었습니다!");
+        }).catch(err => {});
     }
+
+    function copyTextAreaContent() {
+        const area = document.getElementById('copyTextArea');
+        area.select();
+        showToast("텍스트가 전체 선택되었습니다. Ctrl+C를 눌러주세요.");
+    }
+
+    function closeCopyModal() { document.getElementById('copyModal').style.display = 'none'; }
 
     function openPasteModal() {
         document.getElementById('pasteTextArea').value = "";
         document.getElementById('pasteModal').style.display = 'flex';
     }
 
-    function closePasteModal() {
-        document.getElementById('pasteModal').style.display = 'none';
-    }
+    function closePasteModal() { document.getElementById('pasteModal').style.display = 'none'; }
 
     function applyPastedState() {
         const text = document.getElementById('pasteTextArea').value.trim();
         if (!text) {
-            alert("텍스트를 입력해주세요!");
+            showToast("⚠️ 텍스트를 입력해 주세요.");
             return;
         }
         try {
             const data = JSON.parse(text);
             restoreBoardState(data);
             closePasteModal();
-            alert("붙여넣은 현황을 성공적으로 복원했습니다!");
+            showToast("📌 붙여넣은 현황 복원 완료!");
         } catch(e) {
-            alert("올바르지 않은 현황 텍스트 형식입니다.");
+            showToast("⚠️ 올바르지 않은 현황 코드입니다.");
         }
     }
 
-    // 복원 공통 로직
     function restoreBoardState(data) {
-        if (!data.currentRewards || !data.totalSlots) {
-            throw new Error("올바르지 않은 데이터 구조입니다.");
-        }
+        if (!data.currentRewards || !data.totalSlots) throw new Error("Invalid structure");
 
         if (data.titleText !== undefined) {
             titleInput.value = data.titleText;
@@ -1227,9 +1210,9 @@
             try {
                 const data = JSON.parse(e.target.result);
                 restoreBoardState(data);
-                alert(`[${data.savedAt || "저장 파일"}]의 당첨 현황을 성공적으로 복원했습니다!`);
+                showToast(`📂 파일 현황 복원 완료!`);
             } catch (err) {
-                alert("파일을 불러오는 도중 오류가 발생했습니다. 올바른 뽑기판 현황 파일(.json)인지 확인해 주세요.");
+                showToast("⚠️ 파일 불러오기에 실패했습니다.");
             }
             input.value = "";
         };
@@ -1268,7 +1251,7 @@
         });
 
         if (unflippedContainers.length === 0) {
-            alert('모든 카드가 이미 열려있습니다!');
+            showToast('⚠️ 모든 카드가 이미 열려있습니다!');
             return;
         }
 
@@ -1390,13 +1373,10 @@
 
     function renderAnswerSheet() {
         answerGrid.innerHTML = "";
-        
         let rankMap = {};
         currentRewards.forEach((reward, index) => {
             if (reward !== "꽝") {
-                if (!rankMap[reward]) {
-                    rankMap[reward] = [];
-                }
+                if (!rankMap[reward]) rankMap[reward] = [];
                 rankMap[reward].push(index + 1);
             }
         });
