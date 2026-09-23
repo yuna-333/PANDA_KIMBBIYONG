@@ -75,8 +75,26 @@
             height: 320px;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, height 0.3s ease;
             opacity: 1;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: hidden;
             flex-shrink: 0;
+            padding-right: 2px;
+        }
+
+        /* 스크롤바 커스텀 스타일 (500칸 모드용) */
+        .grid-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .grid-container::-webkit-scrollbar-track {
+            background: rgba(237, 226, 255, 0.5);
+            border-radius: 3px;
+        }
+        .grid-container::-webkit-scrollbar-thumb {
+            background: #cbb2fe;
+            border-radius: 3px;
+        }
+        .grid-container::-webkit-scrollbar-thumb:hover {
+            background: #7c4dff;
         }
 
         .grid-container.collapsed {
@@ -128,6 +146,16 @@
             color: #695b8d;
             text-shadow: 0 0 2px #fff, 0 0 2px #fff, 0 0 2px #fff;
             padding-left: 100%;
+        }
+
+        .marquee-track.win-notice {
+            animation: none !important;
+            padding-left: 0 !important;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #512da8;
         }
 
         .marquee-container:hover .marquee-track {
@@ -223,7 +251,7 @@
         @keyframes ultra-smooth-glow { 0%, 100% { box-shadow: 0 0 6px rgba(124, 77, 255, 0.4); } 50% { box-shadow: 0 0 14px rgba(124, 77, 255, 0.8); } }
 
         .prize-header { display: flex; justify-content: center; align-items: center; border-bottom: 2px dashed #cbb2fe; padding-bottom: 8px; margin: 0; min-height: 40px;}
-        .prize-title { font-family: 'OngleipParkDahyeon', sans-serif; font-size: 30px; color: #695b8d; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 8px #cbb2fe; margin: 0; font-weight: ; }
+        .prize-title { font-family: 'OngleipParkDahyeon', sans-serif; font-size: 30px; color: #695b8d; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 3px #fff, 0 0 8px #cbb2fe; margin: 0; }
         
         .prize-banner-img { width: 120%; max-width: 240px; max-height: 100px; object-fit: contain; display: none; }
 
@@ -320,7 +348,7 @@
         .input-bar[type="file"] { padding: 3px; font-size: 11px; cursor: pointer; }
         
         .control-btns { display: flex; gap: 4px; flex-shrink: 0; }
-        .add-btn, .clear-btn, .preset-btn, .shuffle-btn { cursor: pointer; font-family: 'NexonLv1Gothic', sans-serif; font-weight: bold; }
+        .add-btn, .clear-btn, .preset-btn, .shuffle-btn, .save-btn, .load-btn-label { cursor: pointer; font-family: 'NexonLv1Gothic', sans-serif; font-weight: bold; }
         .add-btn { background: linear-gradient(180deg, #d0b7ff, #a787ff); color: white; border: none; padding: 0 10px; border-radius: 6px; }
         .clear-btn { background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 0 10px; border-radius: 6px; }
         
@@ -332,8 +360,14 @@
         .shuffle-btn { width: 100%; background: linear-gradient(180deg, #7c4dff, #695b8d); color: white; text-shadow: 0 0 5px rgba(0,0,0,0.2); border: 1px solid #695b8d; padding: 8px; border-radius: 6px; margin-bottom: 6px;}
         .shuffle-btn:hover { background: linear-gradient(180deg, #ab7fff, #7c4dff); color: white; text-shadow: none; }
         
+        .save-btn { flex: 1; background: linear-gradient(180deg, #8169bf, #695b8d); color: white; border: 1px solid #695b8d; padding: 7px; border-radius: 6px; font-size: 12px; text-align: center; transition: 0.2s; }
+        .save-btn:hover { background: linear-gradient(180deg, #9575cd, #7c4dff); }
+
+        .load-btn-label { flex: 1; background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 7px; border-radius: 6px; font-size: 12px; text-align: center; display: inline-block; transition: 0.2s; }
+        .load-btn-label:hover { background: #f6f0ff; border-color: #7c4dff; }
+
         .size-select-group { display: flex; gap: 4px; margin-bottom: 6px; }
-        .size-btn { flex: 1; background: #f6f0ff; border: 1px solid #d9c4ff; border-radius: 6px; color: #695b8d; font-size: 12px; font-weight: bold; font-family: 'NexonLv1Gothic', sans-serif; padding: 6px 0; cursor: pointer; text-align: center; transition: all 0.2s ease; }
+        .size-btn { flex: 1; background: #f6f0ff; border: 1px solid #d9c4ff; border-radius: 6px; color: #695b8d; font-size: 11px; font-weight: bold; font-family: 'NexonLv1Gothic', sans-serif; padding: 6px 0; cursor: pointer; text-align: center; transition: all 0.2s ease; }
         .size-btn:hover { background: #ede2ff; border-color: #cbb2fe; }
         .size-btn.active { background: #cbb2fe; color: white; border-color: #7c4dff; }
 
@@ -423,6 +457,7 @@
                         <button class="size-btn" id="size25Btn" onclick="setBoardSize(25)">25칸 (5x5)</button>
                         <button class="size-btn" id="size50Btn" onclick="setBoardSize(50)">50칸 (10x5)</button>
                         <button class="size-btn active" id="size100Btn" onclick="setBoardSize(100)">100칸 (10x10)</button>
+                        <button class="size-btn" id="size500Btn" onclick="setBoardSize(500)">500칸 (10x50)</button>
                     </div>
 
                     <h5 style="margin-top: 8px;">상단 타이틀 설정</h5>
@@ -450,8 +485,15 @@
                      
                     <input type="file" id="prizeFile" accept=".txt" style="display:none" onchange="loadPrizesFromFile(this)">
                     <button class="preset-btn" onclick="document.getElementById('prizeFile').click()">⭐프리셋 불러오기</button>
+
+                    <h5 style="margin-top: 10px;">진행 상태 저장/복원</h5>
+                    <div class="input-group">
+                        <button class="save-btn" onclick="saveCurrentBoardState()">💾 현황 저장 (.json)</button>
+                        <label for="stateFile" class="load-btn-label">📂 현황 불러오기</label>
+                        <input type="file" id="stateFile" accept=".json, .txt" style="display:none" onchange="loadBoardStateFromFile(this)">
+                    </div>
                     
-                    <button class="shuffle-btn" onclick="shuffleAndReset()">뽑기판 시작하기</button>
+                    <button class="shuffle-btn" style="margin-top: 6px;" onclick="shuffleAndReset()">뽑기판 시작하기</button>
                 </div> 
 
                 <div class="answer-grid" id="answerGrid">
@@ -519,6 +561,9 @@
     let isAnimating = false;
     let isSwapped = false; 
 
+    // 당첨 안내 타이머 관리 변수
+    let winNoticeTimer = null;
+
     const rankColors = {
         "1등": { bg: "#673ab7", border: "#512da8", color: "#ffffff" },
         "2등": { bg: "#7e57c2", border: "#5e35b1", color: "#ffffff" },
@@ -578,11 +623,12 @@
         });
     }
 
-    function setBoardSize(size) {
+    function setBoardSize(size, skipReset = false) {
         totalSlots = size;
         document.getElementById('size25Btn').classList.remove('active');
         document.getElementById('size50Btn').classList.remove('active');
         document.getElementById('size100Btn').classList.remove('active');
+        document.getElementById('size500Btn').classList.remove('active');
 
         if (size === 25) {
             document.getElementById('size25Btn').classList.add('active');
@@ -591,6 +637,7 @@
             board.style.gridTemplateColumns = 'repeat(5, 1fr)';
             board.style.width = '320px';
             board.style.height = '320px';
+            board.style.overflowY = 'hidden';
             marqueeContainer.style.width = '320px';
         } else if (size === 50) {
             document.getElementById('size50Btn').classList.add('active');
@@ -599,6 +646,16 @@
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
             board.style.width = '320px';
             board.style.height = '155px';
+            board.style.overflowY = 'hidden';
+            marqueeContainer.style.width = '320px';
+        } else if (size === 500) {
+            document.getElementById('size500Btn').classList.add('active');
+            gridCols = 10;
+            gridRows = 50;
+            board.style.gridTemplateColumns = 'repeat(10, 1fr)';
+            board.style.width = '320px';
+            board.style.height = '320px'; // 100칸 영역 크기 고정
+            board.style.overflowY = 'auto'; // 스크롤 추가
             marqueeContainer.style.width = '320px';
         } else {
             document.getElementById('size100Btn').classList.add('active');
@@ -607,6 +664,7 @@
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
             board.style.width = '320px';
             board.style.height = '320px';
+            board.style.overflowY = 'hidden';
             marqueeContainer.style.width = '320px';
         }
 
@@ -614,7 +672,9 @@
         const totalBarHeight = parseInt(boardHeight) + 38;
         document.getElementById('boardToggleContainer').style.height = totalBarHeight + 'px';
 
-        shuffleAndReset();
+        if (!skipReset) {
+            shuffleAndReset();
+        }
     }
 
     function toggleInnerSettings() {
@@ -836,7 +896,28 @@
         updateMarquee();
     }
 
+    // 3초간 당첨 알림 자막을 띄워주는 함수 (문자열 및 배열 지원 수정)
+    function showWinNotice(rankInfo) {
+        if (winNoticeTimer) {
+            clearTimeout(winNoticeTimer);
+        }
+
+        marqueeTrack.classList.add('win-notice');
+        
+        let noticeText = Array.isArray(rankInfo) ? rankInfo.join(', ') : rankInfo;
+        marqueeTrack.innerText = `🎉 ${noticeText} 당첨! 🎉`;
+
+        winNoticeTimer = setTimeout(() => {
+            marqueeTrack.classList.remove('win-notice');
+            winNoticeTimer = null;
+            updateMarquee();
+        }, 3000);
+    }
+
     function updateMarquee() {
+        // 당첨 안내 메시지가 출력 중일 때는 잔여 현황으로 강제 전환하지 않음
+        if (winNoticeTimer) return;
+
         if (prizeListObj.length === 0) {
             marqueeTrack.innerText = "상품 및 수량을 설정하고 뽑기판을 시작해주세요!";
             return;
@@ -880,8 +961,86 @@
         renderAnswerSheet(); 
     }
 
+    function buildCards() {
+        board.innerHTML = "";
+        for (let i = 1; i <= totalSlots; i++) {
+            const cardContainer = document.createElement('div');
+            cardContainer.classList.add('card-container');
+            cardContainer.setAttribute('data-index', i);
+            
+            if (totalSlots === 500) {
+			cardContainer.style.height = '31px';
+			} else if (totalSlots === 50) {
+			cardContainer.style.height = '30px';
+			} else if (totalSlots === 25) {
+			cardContainer.style.height = 'auto'; // 또는 25칸 전용 height 지정
+			} else {
+			cardContainer.style.height = 'auto'; // 예외 경우 기본값
+			}
+
+            const card = document.createElement('div');
+            card.classList.add('card');
+            const cardFront = document.createElement('div');
+            cardFront.classList.add('card-face', 'card-front');
+            cardFront.innerText = i;
+            
+            if (totalSlots === 500) {
+                cardFront.style.fontSize = "18px";
+            }
+
+            const cardBack = document.createElement('div');
+            cardBack.classList.add('card-face', 'card-back');
+            const resultText = currentRewards[i - 1];
+            
+            if (resultText !== "꽝") {
+                cardBack.innerText = resultText;
+                
+                const colorStyle = rankColors[resultText] || defaultWinColor;
+                cardBack.style.background = colorStyle.bg;
+                cardBack.style.borderColor = colorStyle.border;
+                cardBack.style.color = colorStyle.color;
+                cardBack.style.fontSize = totalSlots === 500 ? "20px" : "20px";
+                cardBack.style.fontWeight = "normal";
+            } else {
+                cardBack.innerHTML = '<span style="opacity: 0.8; color: #7e57c2;">X</span>';
+                cardBack.style.background = "#ede2ff"; 
+                cardBack.style.borderColor = "#d9c4ff";
+                cardBack.style.fontSize = totalSlots === 500 ? "13px" : "18px";
+            }
+            card.appendChild(cardFront);
+            card.appendChild(cardBack);
+            cardContainer.appendChild(card);
+            
+            cardContainer.addEventListener('click', () => {
+                if (isAnimating) return;
+                const willFlip = !card.classList.contains('flipped');
+                
+                if (willFlip) {
+                    if (resultText !== "꽝") { 
+                        winSound.currentTime = 0; 
+                        winSound.play().catch(e=>{}); 
+                        showWinNotice(resultText); // 당첨 시 3초 안내 표시
+                    } else { 
+                        flipSound.currentTime = 0; 
+                        flipSound.play().catch(e=>{}); 
+                    }
+                }
+                card.classList.toggle('flipped');
+                updateMarquee();
+            });
+            board.appendChild(cardContainer);
+        }
+    }
+
     function shuffleAndReset() {
         if (isAnimating) return;
+        
+        if (winNoticeTimer) {
+            clearTimeout(winNoticeTimer);
+            winNoticeTimer = null;
+            marqueeTrack.classList.remove('win-notice');
+        }
+
         currentRewards = Array(totalSlots).fill("꽝");
         
         let rewardSlots = [];
@@ -907,56 +1066,97 @@
 
         renderAnswerSheet();
         updateMarquee();
-        board.innerHTML = "";
-        
-        for (let i = 1; i <= totalSlots; i++) {
-            const cardContainer = document.createElement('div');
-            cardContainer.classList.add('card-container');
-            cardContainer.setAttribute('data-index', i);
-            const card = document.createElement('div');
-            card.classList.add('card');
-            const cardFront = document.createElement('div');
-            cardFront.classList.add('card-face', 'card-front');
-            cardFront.innerText = i;
-            const cardBack = document.createElement('div');
-            cardBack.classList.add('card-face', 'card-back');
-            const resultText = currentRewards[i - 1];
-            
-            if (resultText !== "꽝") {
-                cardBack.innerText = resultText;
-                
-                const colorStyle = rankColors[resultText] || defaultWinColor;
-                cardBack.style.background = colorStyle.bg;
-                cardBack.style.borderColor = colorStyle.border;
-                cardBack.style.color = colorStyle.color;
-                cardBack.style.fontSize = "20px";
-                cardBack.style.fontWeight = "normal";
-            } else {
-                cardBack.innerHTML = '<span style="opacity: 0.8; color: #7e57c2;">X</span>';
-                cardBack.style.background = "#ede2ff"; 
-                cardBack.style.borderColor = "#d9c4ff";
-                cardBack.style.fontSize = "18px";
+        buildCards();
+    }
+
+    function saveCurrentBoardState() {
+        const flippedIndices = [];
+        document.querySelectorAll('.card').forEach((card, index) => {
+            if (card.classList.contains('flipped')) {
+                flippedIndices.push(index + 1);
             }
-            card.appendChild(cardFront);
-            card.appendChild(cardBack);
-            cardContainer.appendChild(card);
-            
-            cardContainer.addEventListener('click', () => {
-                if (isAnimating) return;
-                if (!card.classList.contains('flipped')) {
-                    if (resultText !== "꽝") { 
-                        winSound.currentTime = 0; 
-                        winSound.play().catch(e=>{}); 
-                    } else { 
-                        flipSound.currentTime = 0; 
-                        flipSound.play().catch(e=>{}); 
-                    }
+        });
+
+        const stateData = {
+            version: "1.0",
+            savedAt: new Date().toLocaleString('ko-KR'),
+            totalSlots: totalSlots,
+            titleText: titleInput.value,
+            megaFlipText: megaFlipInput.value,
+            prizeListObj: prizeListObj,
+            currentRewards: currentRewards,
+            flippedIndices: flippedIndices
+        };
+
+        const jsonString = JSON.stringify(stateData, null, 2);
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const now = new Date();
+        const dateStr = now.toISOString().slice(0, 10);
+        const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `뽑기판현황_${dateStr}_${timeStr}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function loadBoardStateFromFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+
+                if (!data.currentRewards || !data.totalSlots) {
+                    throw new Error("올바르지 않은 현황 파일 구조입니다.");
                 }
-                card.classList.toggle('flipped');
+
+                if (data.titleText !== undefined) {
+                    titleInput.value = data.titleText;
+                    updateTitleText();
+                }
+
+                if (data.megaFlipText !== undefined) {
+                    megaFlipInput.value = data.megaFlipText;
+                    updateMegaFlipText();
+                }
+
+                if (data.prizeListObj) {
+                    prizeListObj = data.prizeListObj;
+                    renderPrizeList();
+                }
+
+                setBoardSize(data.totalSlots, true);
+                currentRewards = data.currentRewards;
+
+                renderAnswerSheet();
+                buildCards();
+
+                if (Array.isArray(data.flippedIndices)) {
+                    data.flippedIndices.forEach(idx => {
+                        const container = board.querySelector(`.card-container[data-index="${idx}"]`);
+                        if (container) {
+                            const card = container.querySelector('.card');
+                            if (card) card.classList.add('flipped');
+                        }
+                    });
+                }
+
                 updateMarquee();
-            });
-            board.appendChild(cardContainer);
-        }
+                alert(`[${data.savedAt || "저장 파일"}]의 당첨 현황을 성공적으로 복원했습니다!`);
+            } catch (err) {
+                alert("파일을 불러오는 도중 오류가 발생했습니다. 올바른 뽑기판 현황 파일(.json)인지 확인해 주세요.");
+            }
+            input.value = "";
+        };
+        reader.readAsText(file, "UTF-8");
     }
 
     function generateSpiralOrder() {
@@ -1005,8 +1205,11 @@
         isAnimating = true;
         selectedCards.forEach(item => item.card.classList.add('slot-glow'));
 
-        let hasPrize = selectedCards.some(item => currentRewards[item.index - 1] !== "꽝");
-        if (hasPrize) {
+        let prizeItems = selectedCards
+            .map(item => currentRewards[item.index - 1])
+            .filter(reward => reward !== "꽝");
+
+        if (prizeItems.length > 0) {
             winSound.currentTime = 0;
             winSound.play().catch(e=>{});
         } else {
@@ -1019,6 +1222,13 @@
                 item.card.classList.remove('slot-glow');
                 item.card.classList.add('flipped');
             });
+
+            if (prizeItems.length > 0) {
+                // 등수 순으로 정렬 (예: ['1등', '2등', '5등'] 또는 ['2등', '2등', '5등', '5등'])
+                prizeItems.sort((a, b) => parseInt(a) - parseInt(b));
+                showWinNotice(prizeItems);
+            }
+
             updateMarquee();
             isAnimating = false;
         }, 800);
@@ -1039,14 +1249,14 @@
         isAnimating = true;
         cards.forEach(card => card.classList.add('slot-glow'));
         
-        let hasRemainingPrizes = false;
+        let remainingPrizes = [];
         cards.forEach((card, index) => {
             if (!card.classList.contains('flipped') && currentRewards[index] !== "꽝") {
-                hasRemainingPrizes = true;
+                remainingPrizes.push(currentRewards[index]);
             }
         });
 
-        if (hasRemainingPrizes) {
+        if (remainingPrizes.length > 0) {
             winSound.currentTime = 0;
             winSound.play().catch(e=>{});
         } else {
@@ -1054,6 +1264,26 @@
             flipSound.play().catch(e=>{});
         }
         
+        // 500칸 모드일 경우: 1초(1000ms) 동안 glow 연출 후 일괄 뒤집기
+        if (totalSlots === 500) {
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.classList.remove('slot-glow');
+                    card.classList.add('flipped');
+                });
+                if (remainingPrizes.length > 0) {
+                    remainingPrizes.sort((a, b) => parseInt(a) - parseInt(b));
+                    showWinNotice(remainingPrizes);
+                }
+                updateMarquee();
+                isAnimating = false;
+            }, 1000);
+            return;
+        }
+
+        // 25칸, 50칸, 100칸 모드일 경우: 기존 달팽이(Spiral) 순차 애니메이션 유지
+        const delayStep = 25;
+
         setTimeout(() => {
             cards.forEach(card => card.classList.remove('slot-glow'));
             const spiralSequence = generateSpiralOrder();
@@ -1070,13 +1300,17 @@
                                 flipSound.play().catch(e=>{});
                             }
                         }
-                    }, seqIndex * 25);
+                    }, seqIndex * delayStep);
                 }
             });
             setTimeout(() => { 
+                if (remainingPrizes.length > 0) {
+                    remainingPrizes.sort((a, b) => parseInt(a) - parseInt(b));
+                    showWinNotice(remainingPrizes);
+                }
                 updateMarquee();
                 isAnimating = false; 
-            }, spiralSequence.length * 25 + 200);
+            }, spiralSequence.length * delayStep + 200);
         }, 1200);
     }
 
