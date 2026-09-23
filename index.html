@@ -360,10 +360,10 @@
         .shuffle-btn { width: 100%; background: linear-gradient(180deg, #7c4dff, #695b8d); color: white; text-shadow: 0 0 5px rgba(0,0,0,0.2); border: 1px solid #695b8d; padding: 8px; border-radius: 6px; margin-bottom: 6px;}
         .shuffle-btn:hover { background: linear-gradient(180deg, #ab7fff, #7c4dff); color: white; text-shadow: none; }
         
-        .save-btn { flex: 1; background: linear-gradient(180deg, #8169bf, #695b8d); color: white; border: 1px solid #695b8d; padding: 7px; border-radius: 6px; font-size: 12px; text-align: center; transition: 0.2s; }
+        .save-btn { flex: 1; background: linear-gradient(180deg, #8169bf, #695b8d); color: white; border: 1px solid #695b8d; padding: 7px; border-radius: 6px; font-size: 11px; text-align: center; transition: 0.2s; }
         .save-btn:hover { background: linear-gradient(180deg, #9575cd, #7c4dff); }
 
-        .load-btn-label { flex: 1; background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 7px; border-radius: 6px; font-size: 12px; text-align: center; display: inline-block; transition: 0.2s; }
+        .load-btn-label { flex: 1; background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 7px; border-radius: 6px; font-size: 11px; text-align: center; display: inline-block; transition: 0.2s; }
         .load-btn-label:hover { background: #f6f0ff; border-color: #7c4dff; }
 
         .size-select-group { display: flex; gap: 4px; margin-bottom: 6px; }
@@ -487,9 +487,23 @@
                     <button class="preset-btn" onclick="document.getElementById('prizeFile').click()">⭐프리셋 불러오기</button>
 
                     <h5 style="margin-top: 10px;">진행 상태 저장/복원</h5>
+
+                    <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
+                        <div style="display:flex; gap:4px;">
+                            <button class="save-btn" onclick="quickSaveState(1)">💾 1번 슬롯 저장</button>
+                            <button class="load-btn-label" onclick="quickLoadState(1)">📂 1번 불러오기</button>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="save-btn" onclick="quickSaveState(2)">💾 2번 슬롯 저장</button>
+                            <button class="load-btn-label" onclick="quickLoadState(2)">📂 2번 불러오기</button>
+                        </div>
+                        <div style="display:flex; gap:4px;">
+                            <button class="preset-btn" style="margin:0; flex:1; font-size:11px;" onclick="copyStateToClipboard()">📋 텍스트로 복사</button>
+                            <button class="preset-btn" style="margin:0; flex:1; font-size:11px;" onclick="openPasteModal()">📌 텍스트 붙여넣기</button>
+                        </div>
+                    </div>
                     <div class="input-group">
-                        <button class="save-btn" onclick="saveCurrentBoardState()">💾 현황 저장 (.json)</button>
-                        <label for="stateFile" class="load-btn-label">📂 현황 불러오기</label>
+                        <label for="stateFile" class="load-btn-label" style="width:100%; text-align:center;">📂 외부 JSON 파일 불러오기</label>
                         <input type="file" id="stateFile" accept=".json, .txt" style="display:none" onchange="loadBoardStateFromFile(this)">
                     </div>
                     
@@ -511,6 +525,19 @@
                         <div style="display:flex; gap:6px; margin-top:12px;">
                             <button class="shuffle-btn" style="margin:0; flex:1; padding: 6px;" onclick="applyModalPrizes()">적용하기</button>
                             <button class="clear-btn" style="flex:1; padding: 6px;" onclick="closePrizeModal()">취소</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 붙여넣기 모달 -->
+                <div id="pasteModal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content">
+                        <h4 style="color:#695b8d; margin-top:0; text-align:center; border-bottom: 1px dashed #cbb2fe; padding-bottom: 8px; font-size: 15px;">📌 현황 텍스트 붙여넣기</h4>
+                        <div style="font-size: 11px; color: #7c4dff; text-align: center; margin-bottom: 8px;">복사했던 현황 텍스트를 입력해주세요</div>
+                        <textarea id="pasteTextArea" style="width:100%; height:120px; border:1px solid #cbb2fe; border-radius:6px; font-size:11px; padding:6px; resize:none; font-family:monospace;"></textarea>
+                        <div style="display:flex; gap:6px; margin-top:12px;">
+                            <button class="shuffle-btn" style="margin:0; flex:1; padding: 6px;" onclick="applyPastedState()">복원하기</button>
+                            <button class="clear-btn" style="flex:1; padding: 6px;" onclick="closePasteModal()">취소</button>
                         </div>
                     </div>
                 </div>
@@ -654,8 +681,8 @@
             gridRows = 50;
             board.style.gridTemplateColumns = 'repeat(10, 1fr)';
             board.style.width = '320px';
-            board.style.height = '320px'; // 100칸 영역 크기 고정
-            board.style.overflowY = 'auto'; // 스크롤 추가
+            board.style.height = '320px'; 
+            board.style.overflowY = 'auto'; 
             marqueeContainer.style.width = '320px';
         } else {
             document.getElementById('size100Btn').classList.add('active');
@@ -896,7 +923,6 @@
         updateMarquee();
     }
 
-    // 3초간 당첨 알림 자막을 띄워주는 함수 (문자열 및 배열 지원 수정)
     function showWinNotice(rankInfo) {
         if (winNoticeTimer) {
             clearTimeout(winNoticeTimer);
@@ -915,7 +941,6 @@
     }
 
     function updateMarquee() {
-        // 당첨 안내 메시지가 출력 중일 때는 잔여 현황으로 강제 전환하지 않음
         if (winNoticeTimer) return;
 
         if (prizeListObj.length === 0) {
@@ -969,14 +994,14 @@
             cardContainer.setAttribute('data-index', i);
             
             if (totalSlots === 500) {
-			cardContainer.style.height = '31px';
-			} else if (totalSlots === 50) {
-			cardContainer.style.height = '30px';
-			} else if (totalSlots === 25) {
-			cardContainer.style.height = 'auto'; // 또는 25칸 전용 height 지정
-			} else {
-			cardContainer.style.height = 'auto'; // 예외 경우 기본값
-			}
+                cardContainer.style.height = '31px';
+            } else if (totalSlots === 50) {
+                cardContainer.style.height = '30px';
+            } else if (totalSlots === 25) {
+                cardContainer.style.height = 'auto';
+            } else {
+                cardContainer.style.height = 'auto';
+            }
 
             const card = document.createElement('div');
             card.classList.add('card');
@@ -1019,7 +1044,7 @@
                     if (resultText !== "꽝") { 
                         winSound.currentTime = 0; 
                         winSound.play().catch(e=>{}); 
-                        showWinNotice(resultText); // 당첨 시 3초 안내 표시
+                        showWinNotice(resultText);
                     } else { 
                         flipSound.currentTime = 0; 
                         flipSound.play().catch(e=>{}); 
@@ -1069,7 +1094,8 @@
         buildCards();
     }
 
-    function saveCurrentBoardState() {
+    // 데이터 추출 공통 함수
+    function getCurrentStateData() {
         const flippedIndices = [];
         document.querySelectorAll('.card').forEach((card, index) => {
             if (card.classList.contains('flipped')) {
@@ -1077,7 +1103,7 @@
             }
         });
 
-        const stateData = {
+        return {
             version: "1.0",
             savedAt: new Date().toLocaleString('ko-KR'),
             totalSlots: totalSlots,
@@ -1087,22 +1113,109 @@
             currentRewards: currentRewards,
             flippedIndices: flippedIndices
         };
+    }
 
-        const jsonString = JSON.stringify(stateData, null, 2);
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
+    // IndexedDB / LocalStorage 슬롯 저장 기능
+    function quickSaveState(slotNum) {
+        const stateData = getCurrentStateData();
+        try {
+            localStorage.setItem(`boardState_slot_${slotNum}`, JSON.stringify(stateData));
+            alert(`[${slotNum}번 슬롯]에 현재 현황이 안전하게 저장되었습니다! (${stateData.savedAt})`);
+        } catch(e) {
+            alert("슬롯 저장을 진행할 수 없습니다.");
+        }
+    }
 
-        const now = new Date();
-        const dateStr = now.toISOString().slice(0, 10);
-        const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, "-");
+    function quickLoadState(slotNum) {
+        try {
+            const savedRaw = localStorage.getItem(`boardState_slot_${slotNum}`);
+            if (!savedRaw) {
+                alert(`[${slotNum}번 슬롯]에 저장된 데이터가 없습니다.`);
+                return;
+            }
+            const data = JSON.parse(savedRaw);
+            restoreBoardState(data);
+            alert(`[${slotNum}번 슬롯]의 현황을 성공적으로 불러왔습니다! (${data.savedAt})`);
+        } catch(e) {
+            alert("저장 데이터를 불러오는 도중 오류가 발생했습니다.");
+        }
+    }
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `뽑기판현황_${dateStr}_${timeStr}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+    // 클립보드 복사 & 붙여넣기 모달
+    function copyStateToClipboard() {
+        const stateData = getCurrentStateData();
+        const jsonString = JSON.stringify(stateData);
+        
+        navigator.clipboard.writeText(jsonString).then(() => {
+            alert("현재 현황 텍스트가 클립보드에 복사되었습니다!\n메모장 등에 붙여넣어 보관하실 수 있습니다.");
+        }).catch(err => {
+            prompt("아래 복사 코드를 수동으로 전체 복사(Ctrl+C) 해주세요:", jsonString);
+        });
+    }
+
+    function openPasteModal() {
+        document.getElementById('pasteTextArea').value = "";
+        document.getElementById('pasteModal').style.display = 'flex';
+    }
+
+    function closePasteModal() {
+        document.getElementById('pasteModal').style.display = 'none';
+    }
+
+    function applyPastedState() {
+        const text = document.getElementById('pasteTextArea').value.trim();
+        if (!text) {
+            alert("텍스트를 입력해주세요!");
+            return;
+        }
+        try {
+            const data = JSON.parse(text);
+            restoreBoardState(data);
+            closePasteModal();
+            alert("붙여넣은 현황을 성공적으로 복원했습니다!");
+        } catch(e) {
+            alert("올바르지 않은 현황 텍스트 형식입니다.");
+        }
+    }
+
+    // 복원 공통 로직
+    function restoreBoardState(data) {
+        if (!data.currentRewards || !data.totalSlots) {
+            throw new Error("올바르지 않은 데이터 구조입니다.");
+        }
+
+        if (data.titleText !== undefined) {
+            titleInput.value = data.titleText;
+            updateTitleText();
+        }
+
+        if (data.megaFlipText !== undefined) {
+            megaFlipInput.value = data.megaFlipText;
+            updateMegaFlipText();
+        }
+
+        if (data.prizeListObj) {
+            prizeListObj = data.prizeListObj;
+            renderPrizeList();
+        }
+
+        setBoardSize(data.totalSlots, true);
+        currentRewards = data.currentRewards;
+
+        renderAnswerSheet();
+        buildCards();
+
+        if (Array.isArray(data.flippedIndices)) {
+            data.flippedIndices.forEach(idx => {
+                const container = board.querySelector(`.card-container[data-index="${idx}"]`);
+                if (container) {
+                    const card = container.querySelector('.card');
+                    if (card) card.classList.add('flipped');
+                }
+            });
+        }
+
+        updateMarquee();
     }
 
     function loadBoardStateFromFile(input) {
@@ -1113,43 +1226,7 @@
         reader.onload = function(e) {
             try {
                 const data = JSON.parse(e.target.result);
-
-                if (!data.currentRewards || !data.totalSlots) {
-                    throw new Error("올바르지 않은 현황 파일 구조입니다.");
-                }
-
-                if (data.titleText !== undefined) {
-                    titleInput.value = data.titleText;
-                    updateTitleText();
-                }
-
-                if (data.megaFlipText !== undefined) {
-                    megaFlipInput.value = data.megaFlipText;
-                    updateMegaFlipText();
-                }
-
-                if (data.prizeListObj) {
-                    prizeListObj = data.prizeListObj;
-                    renderPrizeList();
-                }
-
-                setBoardSize(data.totalSlots, true);
-                currentRewards = data.currentRewards;
-
-                renderAnswerSheet();
-                buildCards();
-
-                if (Array.isArray(data.flippedIndices)) {
-                    data.flippedIndices.forEach(idx => {
-                        const container = board.querySelector(`.card-container[data-index="${idx}"]`);
-                        if (container) {
-                            const card = container.querySelector('.card');
-                            if (card) card.classList.add('flipped');
-                        }
-                    });
-                }
-
-                updateMarquee();
+                restoreBoardState(data);
                 alert(`[${data.savedAt || "저장 파일"}]의 당첨 현황을 성공적으로 복원했습니다!`);
             } catch (err) {
                 alert("파일을 불러오는 도중 오류가 발생했습니다. 올바른 뽑기판 현황 파일(.json)인지 확인해 주세요.");
@@ -1224,7 +1301,6 @@
             });
 
             if (prizeItems.length > 0) {
-                // 등수 순으로 정렬 (예: ['1등', '2등', '5등'] 또는 ['2등', '2등', '5등', '5등'])
                 prizeItems.sort((a, b) => parseInt(a) - parseInt(b));
                 showWinNotice(prizeItems);
             }
@@ -1264,7 +1340,6 @@
             flipSound.play().catch(e=>{});
         }
         
-        // 500칸 모드일 경우: 1초(1000ms) 동안 glow 연출 후 일괄 뒤집기
         if (totalSlots === 500) {
             setTimeout(() => {
                 cards.forEach(card => {
@@ -1281,7 +1356,6 @@
             return;
         }
 
-        // 25칸, 50칸, 100칸 모드일 경우: 기존 달팽이(Spiral) 순차 애니메이션 유지
         const delayStep = 25;
 
         setTimeout(() => {
