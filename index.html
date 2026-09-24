@@ -346,10 +346,11 @@
         .shuffle-btn { width: 100%; background: linear-gradient(180deg, #7c4dff, #695b8d); color: white; text-shadow: 0 0 5px rgba(0,0,0,0.2); border: 1px solid #695b8d; padding: 8px; border-radius: 6px; margin-bottom: 6px;}
         .shuffle-btn:hover { background: linear-gradient(180deg, #ab7fff, #7c4dff); color: white; text-shadow: none; }
         
-        .save-btn { flex: 1; background: linear-gradient(180deg, #8169bf, #695b8d); color: white; border: 1px solid #695b8d; padding: 7px; border-radius: 6px; font-size: 11px; text-align: center; transition: 0.2s; }
+        .slot-row { display: flex; gap: 3px; width: 100%; }
+        .save-btn { flex: 1; background: linear-gradient(180deg, #8169bf, #695b8d); color: white; border: 1px solid #695b8d; padding: 6px 2px; border-radius: 6px; font-size: 10px; text-align: center; transition: 0.2s; }
         .save-btn:hover { background: linear-gradient(180deg, #9575cd, #7c4dff); }
 
-        .load-btn-label { flex: 1; background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 7px; border-radius: 6px; font-size: 11px; text-align: center; display: inline-block; transition: 0.2s; }
+        .load-btn-label { flex: 1; background: #ffffff; color: #695b8d; border: 1px solid #cbb2fe; padding: 6px 2px; border-radius: 6px; font-size: 10px; text-align: center; display: inline-block; transition: 0.2s; }
         .load-btn-label:hover { background: #f6f0ff; border-color: #7c4dff; }
 
         .size-select-group { display: flex; gap: 4px; margin-bottom: 6px; }
@@ -504,22 +505,22 @@
 
                     <h5 style="margin-top: 10px;">진행 상태 저장/복원</h5>
                     <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:6px;">
-                        <div style="display:flex; gap:4px;">
-                            <button class="save-btn" onclick="quickSaveState(1)">💾 1번 슬롯 저장</button>
-                            <button class="load-btn-label" onclick="quickLoadState(1)">📂 1번 불러오기</button>
+                        <div class="slot-row">
+                            <button class="save-btn" onclick="quickSaveState(1)">💾1번 저장</button>
+                            <button class="save-btn" onclick="quickSaveState(2)">💾2번 저장</button>
+                            <button class="save-btn" onclick="quickSaveState(3)">💾3번 저장</button>
+                            <button class="save-btn" onclick="quickSaveState(4)">💾4번 저장</button>
                         </div>
-                        <div style="display:flex; gap:4px;">
-                            <button class="save-btn" onclick="quickSaveState(2)">💾 2번 슬롯 저장</button>
-                            <button class="load-btn-label" onclick="quickLoadState(2)">📂 2번 불러오기</button>
+                        <div class="slot-row">
+                            <button class="load-btn-label" onclick="quickLoadState(1)">📂1번 열기</button>
+                            <button class="load-btn-label" onclick="quickLoadState(2)">📂2번 열기</button>
+                            <button class="load-btn-label" onclick="quickLoadState(3)">📂3번 열기</button>
+                            <button class="load-btn-label" onclick="quickLoadState(4)">📂4번 열기</button>
                         </div>
                         <div style="display:flex; gap:4px;">
                             <button class="preset-btn" style="margin:0; flex:1; font-size:11px;" onclick="copyStateToClipboard()">📋 텍스트로 복사</button>
                             <button class="preset-btn" style="margin:0; flex:1; font-size:11px;" onclick="openPasteModal()">📌 텍스트 붙여넣기</button>
                         </div>
-                    </div>
-                    <div class="input-group">
-                        <label for="stateFile" class="load-btn-label" style="width:100%; text-align:center;">📂 외부 JSON 파일 불러오기</label>
-                        <input type="file" id="stateFile" accept=".json, .txt" style="display:none" onchange="loadBoardStateFromFile(this)">
                     </div>
                     
                     <button class="shuffle-btn" style="margin-top: 6px;" onclick="shuffleAndReset()">뽑기판 시작하기</button>
@@ -1199,24 +1200,6 @@
         }
 
         updateMarquee();
-    }
-
-    function loadBoardStateFromFile(input) {
-        const file = input.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const data = JSON.parse(e.target.result);
-                restoreBoardState(data);
-                showToast(`📂 파일 현황 복원 완료!`);
-            } catch (err) {
-                showToast("⚠️ 파일 불러오기에 실패했습니다.");
-            }
-            input.value = "";
-        };
-        reader.readAsText(file, "UTF-8");
     }
 
     function generateSpiralOrder() {
